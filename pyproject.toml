@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "forecasting"
+version = "0.1.0"
+description = "Forecasting financial data using econometrics and artificial intelligence"
+authors = ["Mateusz Ortmann, Iga Kozłowska"]
+license = "MIT License"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.13"
+numpy = "^2.2.1"
+pandas = "^2.2.3"
+matplotlib = "^3.10.0"
+scikit-learn = "^1.6.0"
+statsmodels = "^0.14.4"
+seaborn = "^0.13.2"
+lightning = "^2.5.0.post0"
+pytorch-forecasting = "^1.2.0"
+ipykernel = "^6.29.5"
+torch = {version = "^2.5.1+cu121", source = "pytorch-cu121"}
+torchvision = {version = "^0.20.1+cu121", source = "pytorch-cu121"}
+torchaudio = {version = "^2.5.1+cu121", source = "pytorch-cu121"}
+pytest = "^8.3.4"
+pre-commit = "^4.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[[tool.poetry.source]]
+name     = "pytorch-cu121"
+priority = "explicit"
+url      = "https://download.pytorch.org/whl/cu121"

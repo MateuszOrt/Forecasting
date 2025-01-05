@@ -1,0 +1,5 @@
+__pycache__/
+benchmark_time_series.csv
+.env
+.vscode
+.pytest_cache
