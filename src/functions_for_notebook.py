@@ -106,6 +106,7 @@ def forecast_model(model, device, X_test, num_forecast_steps):
     sequence_to_plot = X_test.squeeze().cpu().numpy()
     historical_data = sequence_to_plot[-1]
     forecasted_values = []
+    model.eval()
     with torch.no_grad():
         for _ in range(num_forecast_steps):
             historical_data_tensor = (
@@ -139,11 +140,12 @@ def model_eval(model, X_test, y_test, device):
 
 
 def forecast_model_on_raw_data(
-    model, data_value, device, num_forecast_steps, prediction_start
+    model, data_value, device, num_forecast_steps, prediction_on
 ):
     # squeeze Remove axes of length one from a.
-    historical_data = data_value[prediction_start:].squeeze().cpu().numpy()
+    historical_data = data_value[-prediction_on:].squeeze().cpu().numpy()
     forecasted_values = []
+    model.eval()
     with torch.no_grad():
         for _ in range(num_forecast_steps):
             historical_data_tensor = (
@@ -157,3 +159,44 @@ def forecast_model_on_raw_data(
             historical_data = np.roll(historical_data, shift=-1)
             historical_data[-1] = predicted_value
     return forecasted_values
+
+
+def model_eval_raw_data(model, data, device, prediction_start, prediction_end, scaler):
+    real_values = data[-prediction_end:]
+    # Scaling dataset
+    data_value = data.Value
+    data_value = np.reshape(data_value, (-1, 1))
+    scaled_value = scaler.fit_transform(data_value)
+    scaled_value = np.array(scaled_value)
+    data_value = torch.tensor(scaled_value, dtype=torch.float32)
+
+    # squeeze Remove axes of length one from a.
+    historical_data = (
+        data_value[-prediction_start:-prediction_end].squeeze().cpu().numpy()
+    )
+    num_forecast_steps = len(real_values)
+    forecasted_values = []
+    model.eval()
+    with torch.no_grad():
+        for _ in range(num_forecast_steps):
+            historical_data_tensor = (
+                torch.as_tensor(historical_data).view(1, -1, 1).float().to(device)
+            )
+            predicted_value = model(historical_data_tensor).cpu().numpy()[0, 0]
+            forecasted_values.append(predicted_value)
+            # Roll array elements along a given axis.
+            # Elements that roll beyond the last position are re-introduced at the first.
+            # Last value is being replaced by first one and then is being replaced wit newly predicted value
+            historical_data = np.roll(historical_data, shift=-1)
+            historical_data[-1] = predicted_value
+    forecasted_values_scaled = scaler.inverse_transform(
+        np.array(forecasted_values).reshape(-1, 1)
+    ).flatten()
+    return historical_data, forecasted_values_scaled, real_values
+
+
+def stats(real_values, test_predictions):
+    # Calculate RMSE and R² score
+    rmse = np.sqrt(mean_squared_error(real_values, test_predictions))
+    r2 = r2_score(real_values, test_predictions)
+    return r2, rmse
