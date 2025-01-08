@@ -22,6 +22,7 @@ torchvision = {version = "^0.20.1+cu121", source = "pytorch-cu121"}
 torchaudio = {version = "^2.5.1+cu121", source = "pytorch-cu121"}
 pytest = "^8.3.4"
 pre-commit = "^4.0.1"
+yfinance = "^0.2.51"
 
 
 [build-system]

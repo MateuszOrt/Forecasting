@@ -140,8 +140,13 @@ def model_eval(model, X_test, y_test, device):
 
 
 def forecast_model_on_raw_data(
-    model, data_value, device, num_forecast_steps, prediction_on
+    model, data, device, num_forecast_steps, prediction_on, scaler
 ):
+    data_value = data.Value
+    data_value = np.reshape(data_value, (-1, 1))
+    scaled_value = scaler.fit_transform(data_value)
+    scaled_value = np.array(scaled_value)
+    data_value = torch.tensor(scaled_value, dtype=torch.float32)
     # squeeze Remove axes of length one from a.
     historical_data = data_value[-prediction_on:].squeeze().cpu().numpy()
     forecasted_values = []

@@ -3,3 +3,7 @@ benchmark_time_series.csv
 .env
 .vscode
 .pytest_cache
+hparams.yaml
+metrics.csv
+epoch=*
+.lr*
