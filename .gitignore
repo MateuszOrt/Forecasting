@@ -7,3 +7,5 @@ hparams.yaml
 metrics.csv
 epoch=*
 .lr*
+*.zip
+*.png

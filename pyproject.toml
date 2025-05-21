@@ -23,6 +23,10 @@ torchaudio = {version = "^2.5.1+cu121", source = "pytorch-cu121"}
 pytest = "^8.3.4"
 pre-commit = "^4.0.1"
 yfinance = "^0.2.51"
+torchsummary = "^1.5.1"
+torchviz = "^0.0.3"
+stable-baselines3 = {extras = ["extra"], version = "^2.6.0"}
+gymnasium = "^1.1.1"
 
 
 [build-system]
