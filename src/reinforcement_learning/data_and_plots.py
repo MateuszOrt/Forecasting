@@ -2,17 +2,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def generate_sine_wave(length=400, noise_std=0.02, seed=None):
+def generate_sine_wave(length=400, noise_std=0.02, period=4, seed=None):
     rng = np.random.default_rng(seed)
-    t = np.linspace(0, 4 * 2 * np.pi, length)
+    t = np.linspace(0, period * 2 * np.pi, length)
     prices = 5 + 3 * np.sin(t) + rng.normal(0, noise_std, size=length)
     return prices
 
 
-def plot_sin(data):
+def plot(data):
     plt.figure(figsize=(10, 4))
-    plt.plot(data, label="Cena (sinusoida)")
-    plt.title("Wygenerowana sinusoida cen w SimpleTradingEnv")
+    plt.plot(data, label="Cena")
+    plt.title("Wykres cen")
     plt.xlabel("Krok czasowy")
     plt.ylabel("Cena")
     plt.grid(True)
