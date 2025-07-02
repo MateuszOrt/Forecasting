@@ -113,7 +113,7 @@ def results_plot_continuous(env_predict, prices, threshold=0.001, size_scale=200
         alpha=0.7,
     )
 
-    plt.title("Wykres ceny + decyzje agenta (ciągłe akcje, wielkość ∝ siła decyzji)")
+    plt.title("Wykres ceny + decyzje agenta (ciągłe akcje, wielkość ^ siła decyzji)")
     plt.xlabel("Czas")
     plt.ylabel("Cena")
     plt.legend()

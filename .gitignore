@@ -9,3 +9,4 @@ epoch=*
 .lr*
 *.zip
 *.png
+*tests
