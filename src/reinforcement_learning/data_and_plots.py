@@ -22,12 +22,10 @@ def plot(data):
 
 
 def training_plot(logger_callback):
-    # logs = logger_callback.logs
     logs = logger_callback.logs
 
     plt.figure(figsize=(14, 6))
 
-    # plt.subplot(1, 2, 1)
     plt.plot(logs["timesteps"], logs["value_loss"], label="Value Loss")
     plt.plot(logs["timesteps"], logs["policy_loss"], label="Policy Gradient Loss")
     plt.plot(logs["timesteps"], logs["entropy_loss"], label="Entropy Loss")
@@ -41,14 +39,10 @@ def training_plot(logger_callback):
 
 
 def results_plot(env_predict, prices):
-    # Zakładam, że środowisko jest już przetestowane i mamy historyczne dane
     actions = env_predict.actions_history
 
-    # Zbierz indeksy kupna i sprzedaży
-    buy_points = [i for i, a in enumerate(actions) if a == 1]  # zakładamy: 1 = kup
-    sell_points = [
-        i for i, a in enumerate(actions) if a == 2
-    ]  # zakładamy: 2 = sprzedaj
+    buy_points = [i for i, a in enumerate(actions) if a == 1]
+    sell_points = [i for i, a in enumerate(actions) if a == 2]
 
     # Tworzenie wykresu
     plt.figure(figsize=(14, 6))
@@ -79,14 +73,11 @@ def results_plot(env_predict, prices):
 def results_plot_continuous(env_predict, prices, threshold=0.001, size_scale=200):
     actions = env_predict.actions_history
 
-    # Wydziel kupno i sprzedaż + siłę akcji
     buy_points = [(i, a) for i, a in enumerate(actions) if a > threshold]
     sell_points = [(i, a) for i, a in enumerate(actions) if a < -threshold]
 
     buy_indices = [i for i, a in buy_points]
-    buy_sizes = [
-        abs(a) * size_scale for i, a in buy_points
-    ]  # większa akcja → większy marker
+    buy_sizes = [abs(a) * size_scale for i, a in buy_points]
 
     sell_indices = [i for i, a in sell_points]
     sell_sizes = [abs(a) * size_scale for i, a in sell_points]
@@ -136,12 +127,7 @@ def get_shares_change_list(log_list):
     shares_changes = []
 
     if not log_list:
-        return shares_changes  # Zwróć pustą listę, jeśli wejściowa lista jest pusta
-
-    # Pierwszy element w liście zmian to po prostu początkowa ilość akcji (lub zmiana od 0)
-    # Przyjmujemy, że zaczynamy z 0 akcji, więc pierwsza ilość akcji to zmiana.
-    # Jeśli jednak chcesz, aby to było odzwierciedlenie 'current_shares - previous_shares',
-    # to dla pierwszego kroku 'previous_shares' jest 0.
+        return shares_changes
 
     previous_shares = 0
     for entry in log_list:
@@ -152,8 +138,6 @@ def get_shares_change_list(log_list):
             previous_shares = current_shares
         else:
             print(f"Ostrzeżenie: Element listy nie zawiera klucza 'shares': {entry}")
-            # Jeśli element nie ma klucza 'shares', możesz zdecydować, co dodać do listy zmian
-            # Np. None, 0, lub pominąć ten element. Na potrzeby tego zadania dodajemy 0.
             shares_changes.append(0)
 
     return shares_changes
@@ -169,21 +153,13 @@ def plot_shares_changes_scaled(log_list, prices, size_scale=0.5):
         prices (list or np.array): Lista lub tablica cen do narysowania na wykresie.
         size_scale (int): Skala dla rozmiaru markera, im większa zmiana, tym większy marker.
     """
-    # Użyj wcześniej zdefiniowanej funkcji do uzyskania zmian w akcjach
     shares_changes = get_shares_change_list(log_list)
 
-    # Wydziel punkty kupna i sprzedaży
     buy_indices = []
     buy_sizes = []
     sell_indices = []
     sell_sizes = []
 
-    # Iterujemy przez zmiany w akcjach, zaczynając od drugiego elementu,
-    # bo pierwsza zmiana może być inicjalizacją, a nie akcją agenta.
-    # Jeśli jednak chcesz uwzględnić pierwszą zmianę (np. początkowe akcje),
-    # dostosuj zakres pętli. Tutaj zakładam, że index w log_list i prices jest zgodny z czasem.
-
-    # Upewnij się, że log_list i prices mają pasujące długości
     num_steps = min(len(shares_changes), len(prices))
 
     for i in range(num_steps):

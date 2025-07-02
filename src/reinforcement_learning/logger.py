@@ -35,15 +35,3 @@ class TrainingLoggerCallback(BaseCallback):
                 )
             self.logs["timesteps"].append(self.num_timesteps)
         return True
-
-    # def _on_rollout_end(self) -> bool:
-    #     if self.model and hasattr(self, "ep_info_buffer") and self.ep_info_buffer:
-    #         # ep_info_buffer jest listą słowników, gdzie każdy słownik zawiera informacje o zakończonym epizodzie
-    #         rewards = [ep_info["r"] for ep_info in self.ep_info_buffer]
-    #         lengths = [ep_info["l"] for ep_info in self.ep_info_buffer]
-
-    #         if rewards:
-    #             self.logs["ep_rew_mean"].append(sum(rewards) / len(rewards))
-    #         if lengths:
-    #             self.logs["ep_len_mean"].append(sum(lengths) / len(lengths))
-    #     return True
